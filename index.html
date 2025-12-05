@@ -1,0 +1,868 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jason Sunny Varughese | Strategy & Research</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- React & ReactDOM (Stable) -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    
+    <!-- Babel -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,500&family=Plus+Jakarta+Sans:wght@200;300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-color: #020617;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: #e2e8f0;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            overflow-x: hidden;
+            cursor: default;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Playfair Display', serif;
+        }
+
+        /* Film Grain */
+        .film-grain {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 50;
+            opacity: 0.05;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        }
+
+        /* Animations */
+        @keyframes fade-in-up {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .animate-fade-in-up {
+            animation: fade-in-up 0.4s ease-out forwards;
+        }
+
+        .glass-panel {
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #020617; }
+        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #475569; }
+        
+        /* Utility to ensure text readability */
+        .readable-text {
+            color: #e2e8f0; /* slate-200 equivalent */
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect, useRef } = React;
+        
+        // --- SAFE ICON COMPONENT ---
+        const Icon = ({ name, size = 24, className = "" }) => {
+            const iconRef = useRef(null);
+            
+            // Map our component names to Lucide data-lucide names
+            const iconMap = {
+                Mail: 'mail',
+                Linkedin: 'linkedin',
+                ArrowRight: 'arrow-right',
+                ChevronDown: 'chevron-down',
+                ExternalLink: 'external-link',
+                GraduationCap: 'graduation-cap',
+                LineChart: 'line-chart',
+                Globe: 'globe',
+                Users: 'users',
+                Brain: 'brain',
+                Database: 'database',
+                Menu: 'menu',
+                X: 'x',
+                Award: 'award',
+                Briefcase: 'briefcase',
+                FileText: 'file-text',
+                Languages: 'languages',
+                Cpu: 'cpu',
+                Lightbulb: 'lightbulb',
+                BookOpen: 'book-open',
+                Layers: 'layers',
+                Target: 'target',
+                MapPin: 'map-pin',
+                Crown: 'crown',
+                Trophy: 'trophy',
+                Leaf: 'leaf',
+                Compass: 'compass',
+                BarChart: 'bar-chart-2', // Changed to bar-chart-2 for safety
+                Download: 'download'
+            };
+
+            useEffect(() => {
+                // Safety check: ensure Lucide is loaded
+                if (window.lucide && iconRef.current) {
+                    const lucideName = iconMap[name] || 'circle';
+                    
+                    // Create the icon element
+                    const i = document.createElement('i');
+                    i.setAttribute('data-lucide', lucideName);
+                    
+                    // Clear and append
+                    iconRef.current.innerHTML = '';
+                    iconRef.current.appendChild(i);
+                    
+                    // Trigger Lucide transformation
+                    window.lucide.createIcons({
+                        root: iconRef.current,
+                        nameAttr: 'data-lucide',
+                        attrs: {
+                            width: size,
+                            height: size,
+                            class: className
+                        }
+                    });
+                }
+            }, [name, size, className]);
+
+            return <span ref={iconRef} style={{ display: 'inline-flex', verticalAlign: 'middle' }} />;
+        };
+
+        // --- DATA ---
+        const DATA = {
+            profile: {
+                name: "Jason Sunny Varughese",
+                role: "Researcher at Nomura Research Institute",
+                tagline: "Bridging economic theory and strategic execution to drive policy impact and business growth.",
+                email: "jasonsv007@gmail.com",
+                linkedin: "https://www.linkedin.com/in/jason-sunny-varughese",
+                // Updated with GDrive Link
+                resume: "https://drive.google.com/file/d/1h6fFu4KQmSUMLOkQLGtOvyZ7FchyMSM8/view?usp=drivesdk",
+                bio: "I am a Researcher at Nomura Research Institute focusing on strategic analysis for global clients. I synthesize complex macroeconomic data into actionable insights to support high-stakes decision-making in healthcare and digital sectors.",
+                languages: ["English", "Hindi", "Malayalam"],
+                areasWorkedOn: ["Public Policy", "Market Entry", "Healthcare Strategy", "Digital Transformation"]
+            },
+            experience: [
+                {
+                    id: 1,
+                    role: "Researcher",
+                    company: "Nomura Research Institute (NRI)",
+                    period: "June 2025 - Present",
+                    type: "Full-time",
+                    desc: "Driving strategic research initiatives for global clients, focusing on healthcare ecosystems and regulatory frameworks.",
+                    points: [
+                        "Leading policy impact analysis for APAC government agencies to shape regulatory frameworks for digital health.",
+                        "Architecting proprietary market entry strategies for Japanese MNCs targeting high-growth segments in India.",
+                        "Synthesizing macroeconomic data into executive-level briefings for C-suite stakeholders."
+                    ],
+                    tags: ["Strategy", "Policy", "Healthcare", "Digital Transformation"]
+                },
+                {
+                    id: 2,
+                    role: "Intern",
+                    company: "Nomura Research Institute (NRI)",
+                    period: "Jan 2025 - Mar 2025",
+                    type: "Internship",
+                    desc: "Supported cross-border economic research and data modelling for the consulting division.",
+                    points: [
+                        "Executed deep-dive market sizing and competitive landscape analysis across Japan and APAC regions.",
+                        "Leveraged advanced analytics to identify key growth drivers for client market expansion proposals.", 
+                        "Collaborated with global teams in Tokyo & New York on cross-border project deliverables."
+                    ],
+                    tags: ["Analytics", "Market Research", "Global Teams"]
+                },
+                {
+                    id: 3,
+                    role: "Business Development Intern",
+                    company: "GrowJunction",
+                    period: "May 2022 - Jun 2022",
+                    type: "Internship",
+                    desc: "Led digital strategy and operational efficiency initiatives.",
+                    points: [
+                        "Optimized sales operations workflows, resulting in a 20% measurable gain in process efficiency.",
+                        "Conducted competitive benchmarking to identify and capture untapped customer segments.",
+                        "Developed and executed strategic partnership roadmaps to expand the firm's digital ecosystem."
+                    ],
+                    tags: ["Sales Ops", "Lead Gen", "Strategy"]
+                }
+            ],
+            education: [
+                {
+                    degree: "B.A. (Hons.) Economics",
+                    school: "Kirori Mal College, University of Delhi",
+                    year: "2024",
+                    score: "5.74/10",
+                    desc: "Coursework: Macroeconomics, Development Economics, Econometrics, Game Theory."
+                },
+                {
+                    degree: "Class 12 (CBSE)",
+                    school: "St. Columba's School",
+                    year: "2021",
+                    score: "89.4%",
+                    desc: "Humanities with Mathematics. Distinction in Economics."
+                },
+                {
+                    degree: "Class 10 (CBSE)",
+                    school: "St. Columba's School",
+                    year: "2019",
+                    score: "79.4%",
+                    desc: "Secondary School Examination."
+                }
+            ],
+            skills: {
+                tech: [
+                    { name: "Econometrics", icon: "FileText" },
+                    { name: "Data Analysis", icon: "Database" },
+                    { name: "Market Estimation", icon: "BarChart" },
+                    { name: "Strategic Planning", icon: "Compass" }
+                ],
+                soft: [
+                    { name: "Critical Thinking", icon: "Brain" },
+                    { name: "Leadership", icon: "Crown" },
+                    { name: "Structured Comm.", icon: "Layers" },
+                    { name: "Stakeholder Mgmt", icon: "Users" }
+                ]
+            },
+            leadership: [
+                {
+                    role: "President",
+                    org: "MUSOC: The Music Society",
+                    points: [
+                        "Managed a team of 40+ members, overseeing budgets, logistics, and creative direction.",
+                        "Led the society to secure top positions in numerous Inter-Collegiate competitions."
+                    ],
+                    icon: "Crown"
+                },
+                {
+                    role: "Secretary",
+                    org: "Youth Wing, St. Thomas Mar Thoma Church",
+                    points: [
+                        "Directed operations for 150+ members, ensuring smooth daily functioning.",
+                        "Organized large-scale conferences, camps, and community charity drives."
+                    ],
+                    icon: "Target"
+                }
+            ],
+            distinction: {
+                title: "Honors & Awards",
+                items: [
+                    "Received the Outstanding Cultural Student Award from Kirori Mal College.",
+                    "Secured All India Rank 33 for Western Vocals during Delhi University admissions.",
+                    "Secured multiple 1st place wins in University of Delhi Western Vocal competitions."
+                ]
+            }
+        };
+
+        // --- COMPONENTS ---
+
+        const StrategicBackground = () => {
+            const canvasRef = useRef(null);
+
+            useEffect(() => {
+                const canvas = canvasRef.current;
+                const ctx = canvas.getContext('2d');
+                let width, height, animationFrame;
+                const particles = [];
+                const spacing = 70;
+
+                const resize = () => {
+                    width = window.innerWidth;
+                    height = window.innerHeight;
+                    canvas.width = width;
+                    canvas.height = height;
+                    init();
+                };
+
+                class Node {
+                    constructor(x, y) {
+                        this.baseX = x;
+                        this.baseY = y;
+                        this.x = x;
+                        this.y = y;
+                        this.size = Math.random() * 1.5 + 0.5;
+                        this.driftSpeed = Math.random() * 0.0003 + 0.0001;
+                        this.driftRange = Math.random() * 20 + 5;
+                        this.offset = Math.random() * Math.PI * 2;
+                        this.color = 'rgba(148, 163, 184, 0.2)';
+                    }
+                    update(time) {
+                        this.x = this.baseX + Math.sin(time * this.driftSpeed + this.offset) * this.driftRange;
+                        this.y = this.baseY + Math.cos(time * this.driftSpeed + this.offset) * this.driftRange;
+                    }
+                    draw() {
+                        ctx.fillStyle = this.color;
+                        ctx.beginPath();
+                        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                        ctx.fill();
+                    }
+                }
+
+                const init = () => {
+                    particles.length = 0;
+                    for (let i = 0; i < width + spacing; i += spacing) {
+                        for (let j = 0; j < height + spacing; j += spacing) {
+                            const x = i + (Math.random() - 0.5) * 30;
+                            const y = j + (Math.random() - 0.5) * 30;
+                            particles.push(new Node(x, y));
+                        }
+                    }
+                };
+
+                const animate = (time) => {
+                    ctx.clearRect(0, 0, width, height);
+                    for (let i = 0; i < particles.length; i++) {
+                        const p = particles[i];
+                        p.update(time);
+                        p.draw();
+                    }
+                    ctx.lineWidth = 0.5;
+                    ctx.strokeStyle = 'rgba(148, 163, 184, 0.03)';
+                    for (let a = 0; a < particles.length; a++) {
+                        const nearest = particles.filter(p => {
+                            const dx = Math.abs(p.baseX - particles[a].baseX);
+                            const dy = Math.abs(p.baseY - particles[a].baseY);
+                            return (dx < 10 && dy > 10 && dy < spacing + 20);
+                        });
+                        nearest.forEach(n => {
+                            ctx.beginPath();
+                            ctx.moveTo(particles[a].x, particles[a].y);
+                            ctx.lineTo(n.x, n.y);
+                            ctx.stroke();
+                        });
+                        if (particles[a+1] && Math.abs(particles[a].baseY - particles[a+1].baseY) < 10) {
+                             ctx.beginPath();
+                             ctx.moveTo(particles[a].x, particles[a].y);
+                             ctx.lineTo(particles[a+1].x, particles[a+1].y);
+                             ctx.stroke();
+                        }
+                    }
+                    animationFrame = requestAnimationFrame(animate);
+                };
+
+                window.addEventListener('resize', resize);
+                resize();
+                animate(0);
+                return () => {
+                    window.removeEventListener('resize', resize);
+                    cancelAnimationFrame(animationFrame);
+                };
+            }, []);
+
+            return (
+                <div className="fixed inset-0 z-[-1] bg-[#020617]">
+                    <canvas ref={canvasRef} className="absolute inset-0 w-full h-full"></canvas>
+                    <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,rgba(2,6,23,0.9)_100%)] pointer-events-none"></div>
+                </div>
+            );
+        };
+
+        const SpotlightCard = ({ children, className = "" }) => {
+            const divRef = useRef(null);
+            const [position, setPosition] = useState({ x: 0, y: 0 });
+            const [opacity, setOpacity] = useState(0);
+
+            const handleMouseMove = (e) => {
+                if (!divRef.current) return;
+                const rect = divRef.current.getBoundingClientRect();
+                setPosition({ x: e.clientX - rect.left, y: e.clientY - rect.top });
+            };
+
+            return (
+                <div
+                    ref={divRef}
+                    onMouseMove={handleMouseMove}
+                    onMouseEnter={() => setOpacity(1)}
+                    onMouseLeave={() => setOpacity(0)}
+                    className={`glass-panel relative overflow-hidden rounded-2xl p-8 transition-all duration-300 ${className}`}
+                >
+                    <div
+                        className="pointer-events-none absolute -inset-px transition duration-300"
+                        style={{
+                            opacity,
+                            background: `radial-gradient(600px circle at ${position.x}px ${position.y}px, rgba(56, 189, 248, 0.08), transparent 40%)`,
+                        }}
+                    />
+                    <div className="relative z-10 h-full">{children}</div>
+                </div>
+            );
+        };
+
+        const Reveal = ({ children, delay = 0, className = "" }) => {
+            const [isVisible, setIsVisible] = useState(false);
+            const ref = useRef(null);
+
+            useEffect(() => {
+                const observer = new IntersectionObserver(([entry]) => {
+                    if(entry.isIntersecting) setIsVisible(true);
+                }, { threshold: 0.1 });
+                if(ref.current) observer.observe(ref.current);
+                return () => observer.disconnect();
+            }, []);
+
+            return (
+                <div 
+                    ref={ref} 
+                    className={`transition-all duration-1000 cubic-bezier(0.16, 1, 0.3, 1) ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'} ${className}`}
+                    style={{ transitionDelay: `${delay}ms` }}
+                >
+                    {children}
+                </div>
+            );
+        };
+
+        const SectionHeader = ({ subtitle, title }) => (
+            <div className="mb-20 text-center">
+                <div className="flex items-center gap-4 mb-4 justify-center">
+                    <span className="h-px w-12 bg-blue-500/50"></span>
+                    <h2 className="text-sm font-bold tracking-[0.2em] text-blue-400 uppercase">{subtitle}</h2>
+                    <span className="h-px w-12 bg-blue-500/50"></span>
+                </div>
+                <h3 className="text-4xl md:text-5xl font-bold text-white leading-tight">{title}</h3>
+            </div>
+        );
+
+        // --- MAIN APP ---
+        const App = () => {
+            const [scrollProgress, setScrollProgress] = useState(0);
+            const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+            const [isModalOpen, setIsModalOpen] = useState(false);
+            const [activeSection, setActiveSection] = useState('');
+
+            useEffect(() => {
+                const handleScroll = () => {
+                    // Progress Bar
+                    const total = document.body.scrollHeight - window.innerHeight;
+                    setScrollProgress((window.scrollY / total) * 100);
+
+                    // Active Section Spy
+                    const sections = ['overview', 'experience', 'project', 'education', 'leadership-honors'];
+                    // We add an offset (e.g., 300px) so the highlight updates before the section hits the very top
+                    const scrollPosition = window.scrollY + 300; 
+
+                    let current = '';
+                    for (const section of sections) {
+                        const element = document.getElementById(section);
+                        if (element && element.offsetTop <= scrollPosition) {
+                            current = section;
+                        }
+                    }
+                    setActiveSection(current);
+                };
+                
+                window.addEventListener('scroll', handleScroll);
+                // Trigger once on mount to set initial state
+                handleScroll(); 
+                return () => window.removeEventListener('scroll', handleScroll);
+            }, []);
+
+            const scrollTo = (id) => {
+                setMobileMenuOpen(false);
+                const el = document.getElementById(id);
+                if(el) el.scrollIntoView({ behavior: 'smooth' });
+            };
+
+            return (
+                <div className="min-h-screen relative">
+                    <div className="film-grain"></div>
+                    <StrategicBackground />
+                    
+                    {/* Progress Bar */}
+                    <div className="fixed top-0 left-0 h-1 bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500 z-50 transition-all duration-100 ease-out" style={{ width: `${scrollProgress}%` }}></div>
+
+                    {/* Nav */}
+                    <nav className={`fixed w-full z-40 transition-all duration-300 ${scrollProgress > 2 ? 'bg-slate-950/80 border-b border-white/5 backdrop-blur-xl' : 'bg-transparent'}`}>
+                        <div className="max-w-7xl mx-auto px-6 h-24 flex items-center justify-between">
+                            <div className="font-serif font-bold text-2xl text-white cursor-pointer" onClick={() => window.scrollTo(0,0)}>JSV.</div>
+                            
+                            <div className="hidden md:flex items-center gap-10">
+                                {['Overview', 'Experience', 'Project', 'Education', 'Leadership & Honors'].map((item) => {
+                                    const sectionId = item.toLowerCase().replace(/ & /g, '-').replace(/ /g, '-');
+                                    const isActive = activeSection === sectionId;
+                                    
+                                    return (
+                                        <button 
+                                            key={item} 
+                                            onClick={() => scrollTo(sectionId)}
+                                            className={`text-sm font-medium transition-colors relative group py-2 ${isActive ? 'text-white' : 'text-slate-400 hover:text-white'}`}
+                                        >
+                                            {item}
+                                            <span className={`absolute bottom-0 left-0 h-px bg-blue-400 transition-all duration-300 ${isActive ? 'w-full' : 'w-0 group-hover:w-full'}`}></span>
+                                        </button>
+                                    )
+                                })}
+                                <button onClick={() => setIsModalOpen(true)} className="bg-white text-slate-950 px-5 py-2 rounded-full text-sm font-medium hover:bg-blue-50 transition-colors">Get in Touch</button>
+                            </div>
+
+                            <button className="md:hidden text-white" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
+                                <Icon name={mobileMenuOpen ? "X" : "Menu"} />
+                            </button>
+                        </div>
+                        
+                        {/* Mobile Menu */}
+                        <div className={`md:hidden absolute top-full left-0 w-full bg-slate-950 border-b border-white/10 overflow-hidden transition-all duration-300 ${mobileMenuOpen ? 'max-h-96' : 'max-h-0'}`}>
+                            <div className="flex flex-col p-6 space-y-4">
+                                {['Overview', 'Experience', 'Project', 'Education', 'Leadership & Honors'].map((item) => {
+                                    const sectionId = item.toLowerCase().replace(/ & /g, '-').replace(/ /g, '-');
+                                    const isActive = activeSection === sectionId;
+                                    return (
+                                        <button 
+                                            key={item} 
+                                            onClick={() => scrollTo(sectionId)} 
+                                            className={`text-left text-lg font-medium ${isActive ? 'text-white' : 'text-slate-300'}`}
+                                        >
+                                            {item}
+                                        </button>
+                                    )
+                                })}
+                                <button onClick={() => { setIsModalOpen(true); setMobileMenuOpen(false); }} className="mt-4 bg-white text-slate-950 py-3 rounded-lg font-bold w-full">Contact Me</button>
+                            </div>
+                        </div>
+                    </nav>
+
+                    {/* Hero */}
+                    <header className="relative pt-32 pb-20 px-6 max-w-7xl mx-auto min-h-screen flex flex-col justify-center z-10">
+                        <Reveal>
+                            <h1 className="text-6xl md:text-8xl lg:text-9xl font-serif font-bold leading-[0.95] mb-6 text-white tracking-tight">
+                                Jason Sunny <br/> <span className="text-slate-500">Varughese</span>
+                            </h1>
+                        </Reveal>
+                        <Reveal delay={100}>
+                             <div className="flex items-center gap-3 mb-8">
+                                <span className="h-px w-12 bg-blue-500"></span>
+                                <span className="text-blue-400 font-bold tracking-widest text-sm uppercase">Strategy | Economics | Policy</span>
+                            </div>
+                        </Reveal>
+                         <Reveal delay={200}>
+                            <p className="text-lg md:text-2xl leading-relaxed text-slate-200 font-bold border-l-2 border-blue-500/50 pl-6 max-w-xl mb-12">
+                                {DATA.profile.tagline}
+                            </p>
+                        </Reveal>
+                        <Reveal delay={300}>
+                            <div className="flex flex-wrap gap-4">
+                                {/* Updated Download Button for External Link */}
+                                <a href={DATA.profile.resume} target="_blank" rel="noopener noreferrer" className="px-8 py-4 bg-white text-slate-900 rounded-lg font-bold hover:bg-blue-50 transition-all flex items-center gap-2 group">
+                                    <Icon name="Download" size={18} className="group-hover:text-blue-600 transition-colors"/> Download Resume
+                                </a>
+                                <button onClick={() => setIsModalOpen(true)} className="px-8 py-4 bg-transparent border border-white/20 text-white rounded-lg font-bold hover:bg-white/5 transition-all flex items-center gap-2">
+                                    <Icon name="Mail" size={18}/> Get in Touch
+                                </button>
+                            </div>
+                        </Reveal>
+                    </header>
+
+                    {/* Overview */}
+                    <section id="overview" className="py-32 px-6 relative z-10">
+                        <div className="max-w-7xl mx-auto">
+                            <Reveal><SectionHeader subtitle="Expertise & Profile" title="Professional Overview" /></Reveal>
+                            
+                            <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+                                <Reveal className="md:col-span-2">
+                                    <SpotlightCard className="h-full flex flex-col justify-center border-blue-500/20">
+                                        <div className="flex items-center gap-3 mb-4">
+                                            <div className="p-2 rounded-lg bg-blue-500/10 text-blue-400"><Icon name="Users" size={20}/></div>
+                                            <h3 className="text-lg font-bold text-white">About Me</h3>
+                                        </div>
+                                        <p className="text-base font-medium text-slate-200 leading-relaxed">{DATA.profile.bio}</p>
+                                    </SpotlightCard>
+                                </Reveal>
+
+                                <Reveal delay={100} className="md:col-span-1">
+                                    <SpotlightCard className="h-full border-emerald-500/20">
+                                        <div className="flex items-center gap-3 mb-4">
+                                            <div className="p-2 rounded-lg bg-emerald-500/10 text-emerald-400"><Icon name="Leaf" size={20}/></div>
+                                            <h3 className="text-lg font-bold text-white">Focus Areas</h3>
+                                        </div>
+                                        <div className="flex flex-wrap gap-2">
+                                            {DATA.profile.areasWorkedOn.map((area, i) => (
+                                                <span key={i} className="px-3 py-1.5 bg-white/5 border border-white/10 rounded-lg text-[10px] md:text-xs font-bold uppercase tracking-wider text-white hover:bg-emerald-500/10 transition-colors cursor-default">{area}</span>
+                                            ))}
+                                        </div>
+                                    </SpotlightCard>
+                                </Reveal>
+
+                                <Reveal delay={200} className="md:col-span-1">
+                                    <SpotlightCard className="h-full border-blue-500/20 flex flex-col justify-center">
+                                        <div className="flex items-center gap-3 mb-8">
+                                            <div className="p-2 rounded-lg bg-blue-500/20 text-blue-300"><Icon name="Languages" size={20}/></div>
+                                            <h3 className="text-lg font-bold text-white">Languages</h3>
+                                        </div>
+                                        <div className="flex flex-col gap-4 w-full">
+                                            {DATA.profile.languages.map((lang, i) => (
+                                                <div key={i} className="flex items-center gap-3 text-base font-medium text-slate-200 pl-2">
+                                                    <span className="w-1.5 h-1.5 bg-blue-400 rounded-full"></span> {lang}
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </SpotlightCard>
+                                </Reveal>
+
+                                <Reveal delay={300} className="md:col-span-2">
+                                    <SpotlightCard className="h-full border-violet-500/20">
+                                        <div className="flex items-center gap-3 mb-6">
+                                            <div className="p-2 rounded-lg bg-violet-500/10 text-violet-400"><Icon name="Cpu" size={20}/></div>
+                                            <h3 className="text-lg font-bold text-white">Analytical Tools</h3>
+                                        </div>
+                                        <div className="grid grid-cols-2 gap-4">
+                                            {DATA.skills.tech.map((skill, i) => (
+                                                <div key={i} className="flex items-center gap-3 p-3 rounded-xl bg-white/5 border border-white/5">
+                                                    <Icon name={skill.icon} size={18} className="text-violet-400" />
+                                                    <span className="text-base font-medium text-slate-200">{skill.name}</span>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </SpotlightCard>
+                                </Reveal>
+
+                                <Reveal delay={400} className="md:col-span-2">
+                                    <SpotlightCard className="h-full border-amber-500/20">
+                                        <div className="flex items-center gap-3 mb-6">
+                                            <div className="p-2 rounded-lg bg-amber-500/10 text-amber-400"><Icon name="Lightbulb" size={20}/></div>
+                                            <h3 className="text-lg font-bold text-white">Core Competencies</h3>
+                                        </div>
+                                        <div className="grid grid-cols-2 gap-4">
+                                            {DATA.skills.soft.map((skill, i) => (
+                                                <div key={i} className="flex items-center gap-3 p-3 rounded-xl bg-white/5 border border-white/5">
+                                                    <Icon name={skill.icon} size={18} className="text-amber-400" />
+                                                    <span className="text-base font-medium text-slate-200">{skill.name}</span>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </SpotlightCard>
+                                </Reveal>
+                            </div>
+                        </div>
+                    </section>
+
+                    {/* Experience */}
+                    <section id="experience" className="py-32 px-6 relative z-10">
+                         <div className="absolute inset-0 bg-slate-900/30 backdrop-blur-sm -z-10"></div>
+                         <div className="max-w-5xl mx-auto">
+                            <Reveal><SectionHeader subtitle="Professional History" title="Career Trajectory" /></Reveal>
+                            <div className="space-y-8 relative">
+                                <div className="absolute left-8 top-8 bottom-8 w-px bg-gradient-to-b from-blue-500 to-transparent opacity-20 hidden md:block"></div>
+                                {DATA.experience.map((job, idx) => (
+                                    <Reveal key={job.id} delay={idx*150}>
+                                        <div className="group relative pl-0 md:pl-24">
+                                            <div className="absolute left-6 top-10 w-4 h-4 rounded-full border-2 border-blue-500 bg-slate-950 z-20 hidden md:block"></div>
+                                            <div className="p-8 rounded-3xl border border-white/5 bg-white/5 hover:bg-white/10 transition-all">
+                                                <div className="flex flex-col md:flex-row md:items-center justify-between mb-6 gap-4">
+                                                    <div>
+                                                        <h4 className="text-2xl font-bold text-white">{job.role}</h4>
+                                                        <div className="flex items-center gap-2 text-blue-400 font-medium mt-1"><Icon name="Briefcase" size={16}/> {job.company}</div>
+                                                    </div>
+                                                    <div className="px-4 py-1.5 rounded-full bg-white/5 border border-white/10 text-xs font-bold uppercase text-slate-400 w-fit">{job.period}</div>
+                                                </div>
+                                                <p className="text-base text-slate-200 mb-6 leading-relaxed border-l-2 border-blue-500/30 pl-4">{job.desc}</p>
+                                                <div className="space-y-3 mb-8">
+                                                    {job.points.map((pt, i) => (
+                                                        <div key={i} className="flex gap-4 text-base text-slate-200">
+                                                            <Icon name="ArrowRight" size={16} className="text-blue-500 mt-1 shrink-0" />
+                                                            <span className="leading-relaxed">{pt}</span>
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                                <div className="flex flex-wrap gap-2">
+                                                    {job.tags.map((t, i) => (
+                                                        <span key={i} className="px-3 py-1 bg-white/5 rounded-md text-xs font-medium text-slate-400 border border-white/5">{t}</span>
+                                                    ))}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </Reveal>
+                                ))}
+                            </div>
+                         </div>
+                    </section>
+
+                    {/* Projects */}
+                    <section id="project" className="py-32 px-6 relative z-10">
+                        <div className="max-w-7xl mx-auto">
+                            <Reveal><SectionHeader subtitle="Featured Work" title="Research Project" /></Reveal>
+                            <Reveal>
+                                <div className="rounded-[3rem] overflow-hidden bg-slate-900 border border-white/10 p-12 lg:p-20 mt-10 grid lg:grid-cols-2 gap-16 relative">
+                                    <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 pointer-events-none"></div>
+                                    <div className="relative z-10 flex flex-col justify-center">
+                                        <div className="flex items-center gap-3 text-blue-400 font-bold tracking-widest text-xs uppercase mb-8"><Icon name="Brain" size={16}/> Featured Analysis</div>
+                                        <h3 className="text-3xl lg:text-5xl font-bold mb-8 text-white">Comparative Analysis of Health & Education in BRICS</h3>
+                                        <p className="text-slate-200 mb-10 leading-relaxed text-base font-medium">Authored a comprehensive research paper analyzing India's human capital development relative to BRICS peers. Utilized multivariate regression analysis to isolate key drivers of development outcomes and derive critical policy recommendations.</p>
+                                        <div className="grid grid-cols-2 gap-4">
+                                            <div className="p-5 rounded-2xl bg-white/5 border border-white/10"><Icon name="FileText" className="text-green-400 mb-3"/><div className="text-sm font-bold text-white">Policy Impact</div><div className="text-xs text-slate-400">Sustainable Goals</div></div>
+                                            <div className="p-5 rounded-2xl bg-white/5 border border-white/10"><Icon name="Database" className="text-blue-400 mb-3"/><div className="text-sm font-bold text-white">Econometrics</div><div className="text-xs text-slate-400">Regression Analysis</div></div>
+                                        </div>
+                                    </div>
+                                    <div className="relative bg-white/5 border border-white/10 p-10 rounded-3xl h-full">
+                                        <div className="flex items-center gap-4 mb-8 pb-6 border-b border-white/10">
+                                            <div className="p-3 bg-blue-500 rounded-xl text-white"><Icon name="LineChart" size={24}/></div>
+                                            <div><h4 className="font-bold text-white text-lg">Key Findings</h4><p className="text-xs text-slate-400">Correlation Index</p></div>
+                                        </div>
+                                        <div className="space-y-8">
+                                            <div>
+                                                <div className="flex justify-between text-sm text-slate-200 mb-2"><span>Health Outcomes</span><span className="text-green-400">High Correlation</span></div>
+                                                <div className="h-2 bg-white/10 rounded-full overflow-hidden"><div className="h-full w-[85%] bg-gradient-to-r from-blue-500 to-green-400"></div></div>
+                                            </div>
+                                            <div>
+                                                <div className="flex justify-between text-sm text-slate-200 mb-2"><span>Education Spend (Efficiency)</span><span className="text-blue-400">Moderate Growth</span></div>
+                                                <div className="h-2 bg-white/10 rounded-full overflow-hidden"><div className="h-full w-[65%] bg-gradient-to-r from-blue-600 to-blue-400"></div></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </Reveal>
+                        </div>
+                    </section>
+
+                    {/* Education */}
+                    <section id="education" className="py-32 px-6 relative z-10 bg-slate-900/30 backdrop-blur-sm">
+                        <div className="max-w-7xl mx-auto">
+                            <Reveal><SectionHeader subtitle="Academic Background" title="Education" /></Reveal>
+                            <div className="grid md:grid-cols-3 gap-6 mt-16">
+                                {DATA.education.map((edu, idx) => (
+                                    <Reveal key={idx} delay={idx*100}>
+                                        <SpotlightCard className="bg-slate-900/50 flex flex-col justify-between h-full">
+                                            <div>
+                                                <div className="flex justify-between items-start mb-4">
+                                                    <h4 className="text-xl font-bold text-white">{edu.degree}</h4>
+                                                    <span className="text-xs font-bold text-slate-400 bg-white/5 px-2 py-1 rounded border border-white/10">{edu.year}</span>
+                                                </div>
+                                                <p className="text-blue-400 text-sm mb-4 font-medium flex items-center gap-2"><Icon name="GraduationCap" size={16}/> {edu.school}</p>
+                                            </div>
+                                            <div className="pt-4 border-t border-white/5 flex justify-between items-start text-sm text-slate-200">
+                                                <span>{edu.desc}</span>
+                                                <span className="text-emerald-400 font-bold shrink-0 ml-4">{edu.score}</span>
+                                            </div>
+                                        </SpotlightCard>
+                                    </Reveal>
+                                ))}
+                            </div>
+                        </div>
+                    </section>
+
+                    {/* Leadership & Honors */}
+                    <section id="leadership-honors" className="py-32 px-6 relative z-10">
+                        <div className="max-w-7xl mx-auto">
+                            <Reveal><SectionHeader subtitle="Distinctions" title="Leadership & Honors" /></Reveal>
+                            <div className="grid lg:grid-cols-3 gap-8 mt-16">
+                                <div className="lg:col-span-2 space-y-6">
+                                    {DATA.leadership.map((lead, idx) => (
+                                        <Reveal key={idx} delay={idx*100}>
+                                            <SpotlightCard>
+                                                <div className="flex items-start gap-6">
+                                                    <div className="p-3 rounded-xl bg-white/5 text-amber-300 shrink-0"><Icon name={lead.icon} size={24}/></div>
+                                                    <div>
+                                                        <h4 className="text-xl font-bold text-white mb-1">{lead.role}</h4>
+                                                        <p className="text-blue-400 text-sm mb-4 font-medium">{lead.org}</p>
+                                                        <ul className="grid md:grid-cols-2 gap-4">
+                                                            {lead.points.map((pt, i) => (
+                                                                <li key={i} className="text-slate-200 text-base leading-relaxed flex gap-2">
+                                                                    <span className="text-amber-500 mt-1.5 text-[8px] shrink-0">●</span>{pt}
+                                                                </li>
+                                                            ))}
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </SpotlightCard>
+                                        </Reveal>
+                                    ))}
+                                </div>
+                                <div className="lg:col-span-1">
+                                    <Reveal delay={300} className="h-full">
+                                        <div className="h-full p-1 rounded-3xl bg-gradient-to-b from-amber-500/20 to-orange-600/20">
+                                            <div className="bg-slate-950/90 rounded-[22px] p-8 backdrop-blur-xl h-full flex flex-col justify-center">
+                                                <div className="flex items-center gap-4 mb-6">
+                                                    <div className="p-3 bg-amber-500/20 text-amber-400 rounded-xl"><Icon name="Trophy" size={24}/></div>
+                                                    <h4 className="text-xl font-bold text-white">{DATA.distinction.title}</h4>
+                                                </div>
+                                                <ul className="space-y-4">
+                                                    {DATA.distinction.items.map((item, i) => (
+                                                        <li key={i} className="text-slate-200 leading-relaxed text-base flex gap-3">
+                                                            <span className="text-amber-500 mt-1.5 text-[8px] shrink-0">●</span>{item}
+                                                        </li>
+                                                    ))}
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </Reveal>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    {/* Footer */}
+                    <footer className="py-24 px-6 relative z-10 border-t border-white/10 bg-slate-950 text-center">
+                         <Reveal>
+                            <h2 className="font-serif font-bold text-5xl md:text-7xl text-white mb-8">Let's Connect.</h2>
+                            <p className="text-slate-400 text-lg max-w-2xl mx-auto mb-12 font-light">Looking for opportunities in strategy consulting.</p>
+                            <div className="flex flex-wrap justify-center gap-6">
+                                <a href={`mailto:${DATA.profile.email}`} className="bg-white text-slate-950 px-8 py-3 rounded-full font-medium hover:bg-blue-50 flex items-center gap-2"><Icon name="Mail" size={20}/> Email Me</a>
+                                <a href={DATA.profile.linkedin} target="_blank" className="bg-transparent border border-slate-700 text-slate-300 px-8 py-3 rounded-full font-medium hover:bg-slate-800 flex items-center gap-2"><Icon name="Linkedin" size={20}/> LinkedIn</a>
+                            </div>
+                            <div className="mt-24 pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center text-sm text-slate-500">
+                                <p>© 2025 Jason Sunny Varughese.</p>
+                                <p className="mt-2 md:mt-0 flex items-center gap-2"><Icon name="MapPin" size={14}/> New Delhi, India</p>
+                            </div>
+                         </Reveal>
+                    </footer>
+
+                    {/* Modal */}
+                    {isModalOpen && (
+                        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-fade-in-up">
+                            <div className="bg-slate-900 rounded-3xl w-full max-w-lg shadow-2xl border border-white/10 p-8 relative">
+                                <button onClick={() => setIsModalOpen(false)} className="absolute top-4 right-4 p-2 rounded-full hover:bg-white/10 text-slate-400 hover:text-white"><Icon name="X" size={20}/></button>
+                                <h3 className="text-3xl font-serif font-bold text-white mb-3 text-center">Let's Connect</h3>
+                                <p className="text-slate-400 mb-8 font-light text-center px-4">Open to discussing strategy consulting opportunities.</p>
+                                <div className="flex flex-col gap-4">
+                                    <a href={`mailto:${DATA.profile.email}`} className="flex items-center justify-between p-4 bg-slate-50 rounded-xl hover:bg-blue-50 transition-colors border border-slate-100 group">
+                                        <div className="flex items-center gap-4">
+                                            <div className="p-3 bg-white rounded-full shadow-sm text-slate-900"><Icon name="Mail" size={20}/></div>
+                                            <div className="text-left"><span className="block font-bold text-slate-900">Send Email</span><span className="text-xs text-slate-500">{DATA.profile.email}</span></div>
+                                        </div>
+                                        <Icon name="ArrowRight" size={18} className="text-slate-300 group-hover:text-blue-500" />
+                                    </a>
+                                    <a href={DATA.profile.linkedin} target="_blank" className="flex items-center justify-between p-4 bg-slate-50 rounded-xl hover:bg-blue-50 transition-colors border border-slate-100 group">
+                                        <div className="flex items-center gap-4">
+                                            <div className="p-3 bg-white rounded-full shadow-sm text-slate-900"><Icon name="Linkedin" size={20}/></div>
+                                            <div className="text-left"><span className="block font-bold text-slate-900">LinkedIn</span><span className="text-xs text-slate-500">Connect Professionally</span></div>
+                                        </div>
+                                        <Icon name="ExternalLink" size={18} className="text-slate-300 group-hover:text-blue-500" />
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+                </div>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
