@@ -125,10 +125,9 @@
                 Compass: 'compass',
                 BarChart: 'bar-chart-2', // Changed to bar-chart-2 for safety
                 Download: 'download',
-                User: 'user',
-                Monitor: 'monitor',
+                // Added for new Analytical Tools categories
                 DollarSign: 'dollar-sign',
-                PieChart: 'pie-chart'
+                Monitor: 'monitor'
             };
 
             useEffect(() => {
@@ -168,16 +167,11 @@
                 tagline: "Bridging economic theory and strategic execution to drive policy impact and business growth.",
                 email: "jasonsv007@gmail.com",
                 linkedin: "https://www.linkedin.com/in/jason-sunny-varughese",
+                // Updated with GDrive Link
                 resume: "https://drive.google.com/file/d/1h6fFu4KQmSUMLOkQLGtOvyZ7FchyMSM8/view?usp=drivesdk",
                 bio: "I am a Researcher at Nomura Research Institute focusing on strategic analysis for global clients. I synthesize complex macroeconomic data into actionable insights to support high-stakes decision-making in healthcare and digital sectors.",
                 languages: ["English", "Hindi", "Malayalam"],
-                // Converted to objects for uniform card design
-                areasWorkedOn: [
-                    { name: "Public Policy", icon: "Globe" },
-                    { name: "Market Entry", icon: "Target" },
-                    { name: "Healthcare Strategy", icon: "Leaf" },
-                    { name: "Digital Transformation", icon: "Monitor" }
-                ]
+                areasWorkedOn: ["Public Policy", "Market Entry", "Healthcare Strategy", "Digital Transformation"]
             },
             experience: [
                 {
@@ -472,7 +466,7 @@
                     setScrollProgress((window.scrollY / total) * 100);
 
                     // Active Section Spy
-                    const sections = ['overview', 'experience', 'project', 'education', 'leadership-honors'];
+                    const sections = ['overview', 'experience', 'projects', 'education', 'leadership-honors'];
                     // We add an offset (e.g., 300px) so the highlight updates before the section hits the very top
                     const scrollPosition = window.scrollY + 300; 
 
@@ -512,7 +506,7 @@
                             <div className="font-serif font-bold text-2xl text-white cursor-pointer" onClick={() => window.scrollTo(0,0)}>JSV.</div>
                             
                             <div className="hidden md:flex items-center gap-10">
-                                {['Overview', 'Experience', 'Project', 'Education', 'Leadership & Honors'].map((item) => {
+                                {['Overview', 'Experience', 'Projects', 'Education', 'Leadership & Honors'].map((item) => {
                                     const sectionId = item.toLowerCase().replace(/ & /g, '-').replace(/ /g, '-');
                                     const isActive = activeSection === sectionId;
                                     
@@ -538,7 +532,7 @@
                         {/* Mobile Menu */}
                         <div className={`md:hidden absolute top-full left-0 w-full bg-slate-950 border-b border-white/10 overflow-hidden transition-all duration-300 ${mobileMenuOpen ? 'max-h-96' : 'max-h-0'}`}>
                             <div className="flex flex-col p-6 space-y-4">
-                                {['Overview', 'Experience', 'Project', 'Education', 'Leadership & Honors'].map((item) => {
+                                {['Overview', 'Experience', 'Projects', 'Education', 'Leadership & Honors'].map((item) => {
                                     const sectionId = item.toLowerCase().replace(/ & /g, '-').replace(/ /g, '-');
                                     const isActive = activeSection === sectionId;
                                     return (
@@ -609,13 +603,9 @@
                                             <div className="p-2 rounded-lg bg-emerald-500/10 text-emerald-400"><Icon name="Leaf" size={20}/></div>
                                             <h3 className="text-lg font-bold text-white">Focus Areas</h3>
                                         </div>
-                                        {/* Updated Focus Areas to uniform Card Style */}
-                                        <div className="flex flex-col gap-3">
+                                        <div className="flex flex-wrap gap-2">
                                             {DATA.profile.areasWorkedOn.map((area, i) => (
-                                                <div key={i} className="flex items-center gap-3 p-3 rounded-xl bg-white/5 border border-white/5 hover:bg-white/10 transition-colors">
-                                                    <Icon name={area.icon} size={18} className="text-emerald-400 shrink-0" />
-                                                    <span className="text-base font-medium text-slate-200">{area.name}</span>
-                                                </div>
+                                                <span key={i} className="px-3 py-1.5 bg-white/5 border border-white/10 rounded-lg text-[10px] md:text-xs font-bold uppercase tracking-wider text-white hover:bg-emerald-500/10 transition-colors cursor-default">{area}</span>
                                             ))}
                                         </div>
                                     </SpotlightCard>
@@ -645,8 +635,8 @@
                                         </div>
                                         <div className="grid grid-cols-2 gap-4">
                                             {DATA.skills.tech.map((skill, i) => (
-                                                <div key={i} className="flex items-center gap-3 p-3 rounded-xl bg-white/5 border border-white/5 hover:bg-white/10 transition-colors">
-                                                    <Icon name={skill.icon} size={18} className="text-violet-400 shrink-0" />
+                                                <div key={i} className="flex items-center gap-3 p-3 rounded-xl bg-white/5 border border-white/5">
+                                                    <Icon name={skill.icon} size={18} className="text-violet-400" />
                                                     <span className="text-base font-medium text-slate-200">{skill.name}</span>
                                                 </div>
                                             ))}
@@ -662,8 +652,8 @@
                                         </div>
                                         <div className="grid grid-cols-2 gap-4">
                                             {DATA.skills.soft.map((skill, i) => (
-                                                <div key={i} className="flex items-center gap-3 p-3 rounded-xl bg-white/5 border border-white/5 hover:bg-white/10 transition-colors">
-                                                    <Icon name={skill.icon} size={18} className="text-amber-400 shrink-0" />
+                                                <div key={i} className="flex items-center gap-3 p-3 rounded-xl bg-white/5 border border-white/5">
+                                                    <Icon name={skill.icon} size={18} className="text-amber-400" />
                                                     <span className="text-base font-medium text-slate-200">{skill.name}</span>
                                                 </div>
                                             ))}
@@ -716,9 +706,9 @@
                     </section>
 
                     {/* Projects */}
-                    <section id="project" className="py-32 px-6 relative z-10">
+                    <section id="projects" className="py-32 px-6 relative z-10">
                         <div className="max-w-7xl mx-auto">
-                            <Reveal><SectionHeader subtitle="Featured Work" title="Research Project" /></Reveal>
+                            <Reveal><SectionHeader subtitle="Featured Work" title="Research Projects" /></Reveal>
                             <Reveal>
                                 <div className="rounded-[3rem] overflow-hidden bg-slate-900 border border-white/10 p-12 lg:p-20 mt-10 grid lg:grid-cols-2 gap-16 relative">
                                     <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 pointer-events-none"></div>
